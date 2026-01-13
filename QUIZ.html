@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Class X IT 402 – Digital Documentation</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6f9;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+        text-align: center;
+        color: #1a237e;
+    }
+    .question {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    .options label {
+        display: block;
+        padding: 10px;
+        margin-bottom: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .correct {
+        background-color: #c8e6c9;
+        border-color: #2e7d32;
+    }
+    .wrong {
+        background-color: #ffcdd2;
+        border-color: #c62828;
+    }
+    .buttons {
+        margin-top: 20px;
+        text-align: center;
+    }
+    button {
+        padding: 10px 20px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    #scoreBox {
+        display: none;
+        text-align: center;
+        font-size: 22px;
+        color: #1b5e20;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>DAV PUBLIC SCHOOL MATHURAPUR</h2>
+    <h3>Class X – IT (402) | Digital Documentation</h3>
+
+    <div id="quiz">
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+    </div>
+
+    <div class="buttons">
+        <button onclick="prevQuestion()">BACK</button>
+        <button onclick="nextQuestion()">NEXT</button>
+    </div>
+
+    <div id="scoreBox"></div>
+</div>
+
+<script>
+const questions = [
+ {q:"Which software is used for digital documentation?", o:["Paint","Word Processor","Browser","Compiler"], a:1},
+ {q:"Default extension of OpenOffice Writer?", o:[".doc",".docx",".odt",".pdf"], a:2},
+ {q:"Shortcut for Bold text?", o:["Ctrl+I","Ctrl+U","Ctrl+B","Ctrl+P"], a:2},
+ {q:"Shortcut to save document?", o:["Ctrl+N","Ctrl+S","Ctrl+O","Ctrl+A"], a:1},
+ {q:"Alignment on both margins?", o:["Left","Right","Center","Justify"], a:3},
+ {q:"Tool for spelling mistakes?", o:["Thesaurus","Spell Check","AutoCorrect","Grammar"], a:1},
+ {q:"Shortcut for Copy?", o:["Ctrl+X","Ctrl+V","Ctrl+C","Ctrl+Z"], a:2},
+ {q:"Insert page number from?", o:["Format","Tools","Insert","View"], a:2},
+ {q:"Thesaurus provides?", o:["Antonyms","Synonyms","Spelling","Fonts"], a:1},
+ {q:"AutoCorrect is used for?", o:["Formatting","Typing errors","Printing","Saving"], a:1},
+ {q:"Shortcut for Paste?", o:["Ctrl+P","Ctrl+V","Ctrl+C","Ctrl+X"], a:1},
+ {q:"Header/Footer appears?", o:["First page","Last page","Every page","Selected page"], a:2},
+ {q:"Page orientation options?", o:["Bold/Italic","Portrait/Landscape","Left/Right","Top/Bottom"], a:1},
+ {q:"Find option is used to?", o:["Delete text","Search text","Format text","Replace page"], a:1},
+ {q:"Print Preview shows?", o:["Draft","Web view","Final print","Outline"], a:2},
+ {q:"Shortcut Select All?", o:["Ctrl+S","Ctrl+A","Ctrl+Z","Ctrl+P"], a:1},
+ {q:"Insert table from?", o:["View","Insert","Tools","Format"], a:1},
+ {q:"Find and Replace is used to?", o:["Search only","Replace text","Delete file","Insert image"], a:1},
+ {q:"Best format for sharing?", o:[".docx",".odt",".txt",".pdf"], a:3},
+ {q:"Track Changes is used for?", o:["Formatting","Review edits","Spelling","Printing"], a:1}
+];
+
+let current = 0;
+let answers = Array(questions.length).fill(null);
+
+function loadQuestion() {
+    const q = questions[current];
+    document.getElementById("question").innerText =
+        `Q${current+1}. ${q.q}`;
+    const optDiv = document.getElementById("options");
+    optDiv.innerHTML = "";
+
+    q.o.forEach((opt, i) => {
+        const lbl = document.createElement("label");
+        lbl.innerHTML = `<input type="radio" name="opt"> ${opt}`;
+        lbl.onclick = () => selectAnswer(i, lbl);
+        if (answers[current] !== null) {
+            if (i === q.a) lbl.classList.add("correct");
+            if (i === answers[current] && answers[current] !== q.a)
+                lbl.classList.add("wrong");
+        }
+        optDiv.appendChild(lbl);
+    });
+}
+
+function selectAnswer(i, label) {
+    if (answers[current] !== null) return;
+    answers[current] = i;
+    if (i === questions[current].a)
+        label.classList.add("correct");
+    else {
+        label.classList.add("wrong");
+        document.querySelectorAll(".options label")[questions[current].a]
+            .classList.add("correct");
+    }
+}
+
+function nextQuestion() {
+    if (current < questions.length - 1) {
+        current++;
+        loadQuestion();
+    } else showScore();
+}
+
+function prevQuestion() {
+    if (current > 0) {
+        current--;
+        loadQuestion();
+    }
+}
+
+function showScore() {
+    let score = 0;
+    answers.forEach((a,i)=>{ if(a===questions[i].a) score++; });
+    document.getElementById("quiz").style.display="none";
+    document.querySelector(".buttons").style.display="none";
+    const box = document.getElementById("scoreBox");
+    box.style.display="block";
+    box.innerHTML = `FINAL SCORE: ${score} / ${questions.length}`;
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
